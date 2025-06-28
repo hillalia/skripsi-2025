@@ -2,18 +2,21 @@
 
 namespace Database\Seeders;
 
+use App\Models\Employee;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
-class RoleSeeder extends Seeder
+class EmployeeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => 'super_admin']);
-        Role::firstOrCreate(['name' => 'employee']);
+        Employee::firstOrCreate([
+            'user_id' => 2,
+            'position_id' => 1,
+            'department_id' => 1
+        ]);
     }
 }
