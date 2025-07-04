@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\EmployeeResource\Pages;
-use App\Filament\Admin\Resources\EmployeeResource\RelationManagers;
-use App\Models\Employee;
+use App\Filament\Admin\Resources\MasterPajakResource\Pages;
+use App\Filament\Admin\Resources\MasterPajakResource\RelationManagers;
+use App\Models\MasterPajak;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EmployeeResource extends Resource
+class MasterPajakResource extends Resource
 {
-    protected static ?string $model = Employee::class;
+    protected static ?string $model = MasterPajak::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,18 +23,12 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
-                Forms\Components\Select::make('position_id')
-                    ->relationship('position', 'name')
-                    ->required(),
-                Forms\Components\Select::make('department_id')
-                    ->relationship('department', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('token')
-                    ->maxLength(255)
-                    ->default(null),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('persentase')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
@@ -42,16 +36,9 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('position.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('department.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('token')
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('persentase')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -85,9 +72,9 @@ class EmployeeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEmployees::route('/'),
-            'create' => Pages\CreateEmployee::route('/create'),
-            'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'index' => Pages\ListMasterPajaks::route('/'),
+            'create' => Pages\CreateMasterPajak::route('/create'),
+            'edit' => Pages\EditMasterPajak::route('/{record}/edit'),
         ];
     }
 }

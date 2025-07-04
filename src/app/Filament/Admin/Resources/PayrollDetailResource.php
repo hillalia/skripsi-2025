@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\EmployeeResource\Pages;
-use App\Filament\Admin\Resources\EmployeeResource\RelationManagers;
-use App\Models\Employee;
+use App\Filament\Admin\Resources\PayrollDetailResource\Pages;
+use App\Filament\Admin\Resources\PayrollDetailResource\RelationManagers;
+use App\Models\PayrollDetail;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EmployeeResource extends Resource
+class PayrollDetailResource extends Resource
 {
-    protected static ?string $model = Employee::class;
+    protected static ?string $model = PayrollDetail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,18 +23,21 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
-                Forms\Components\Select::make('position_id')
-                    ->relationship('position', 'name')
-                    ->required(),
-                Forms\Components\Select::make('department_id')
-                    ->relationship('department', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('token')
-                    ->maxLength(255)
-                    ->default(null),
+                Forms\Components\Select::make('employee_id')
+                    ->required()
+                    ->relationship('employee.user', 'name'),
+                Forms\Components\Select::make('master_payroll_id')
+                    ->required()
+                    ->relationship('masterpayroll', 'name'),
+                Forms\Components\Select::make('master_bpjs_id')
+                    ->required()
+                    ->relationship('masterbpjs', 'name'),
+                Forms\Components\Select::make('master_pajak_id')
+                    ->required()
+                    ->relationship('masterpajak', 'name'),
+                Forms\Components\TextInput::make('total_gaji')
+                    ->disabled()
+                    ->maxLength(255),
             ]);
     }
 
@@ -42,16 +45,15 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('employee.user.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('position.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('masterpayroll')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('department.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('masterbpjs.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('token')
+                Tables\Columns\TextColumn::make('masterpajak.name')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('total_gaji')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -85,9 +87,9 @@ class EmployeeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEmployees::route('/'),
-            'create' => Pages\CreateEmployee::route('/create'),
-            'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'index' => Pages\ListPayrollDetails::route('/'),
+            'create' => Pages\CreatePayrollDetail::route('/create'),
+            'edit' => Pages\EditPayrollDetail::route('/{record}/edit'),
         ];
     }
 }
